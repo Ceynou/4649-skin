@@ -212,7 +212,7 @@ base.createNoteskin = function(key, scratch, pedal, path, cfg)
 	local spaceTotal = 0
 	local lineSpace = 0
 
-	if cfg._4649.ui.align == "center" then
+	if cfg._4649.ui.align == "center" and scratch+pedal == 1 then
 		if cfg._4649.ui.scratchAlign == "left" then
 			offsetCenter = -cfg._4649.notes.widthSP / 2
 		elseif  cfg._4649.ui.scratchAlign == "right" then
@@ -241,6 +241,8 @@ base.createNoteskin = function(key, scratch, pedal, path, cfg)
 			table.insert(width, 1, widthTotal + spaceTotal)
 
 			table.insert(spaces, 2, -widthTotal - cfg._4649.ui.widthLines)
+			
+			table.insert(lines, 1, 0)
 		end
 		lineSpace = spaceTotal / 2
 	else
