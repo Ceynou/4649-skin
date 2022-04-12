@@ -472,6 +472,22 @@ local settings = {
 		displayRange = {"no", "yes"}
 	},
     {
+        name = "align",
+        section = "4649",
+        key = "_4649.ui.align",
+        type = "stepper",
+        values = {"left", "center", "right"},
+        displayValues = {"left", "center", "right"}
+    },
+    {
+        name = "scratchAlign",
+        section = "4649",
+        key = "_4649.ui.scratchAlign",
+        type = "stepper",
+        values = {"left", "center", "right"},
+        displayValues = {"left", "center", "right"}
+    },
+    {
         name = "hitposition",
         section = "4649",
         key = "_4649.ui.hitposition",
@@ -533,35 +549,7 @@ local settings = {
 		range = {-480, 480},
 		step = 1,
 		format = "%d"
-    },
-    {
-        name = "align",
-        section = "4649",
-        key = "_4649.ui.align",
-        type = "stepper",
-        values = {"left", "center", "right"},
-        displayValues = {"left", "center", "right"}
-    },
-    {
-        name = "scratchAlign",
-        section = "4649",
-        key = "_4649.ui.scratchAlign",
-        type = "stepper",
-        values = {"left", "center", "right"},
-        displayValues = {"left", "center", "right"}
-    },
-	{
-		name = "increase hitposition",
-		section = "gameplay",
-		key = "_4649.input.hitposition.increase",
-		type = "binding"
-	},
-	{
-		name = "decrease hitposition",
-		section = "gameplay",
-		key = "_4649.input.hitposition.decrease",
-		type = "binding"
-	}
+    }
 }
 
 return settings
