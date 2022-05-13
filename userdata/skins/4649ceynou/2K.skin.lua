@@ -3,5 +3,5 @@ local ImguiConfig = require("sphere.ImguiConfig")
 local root = (...):match("(.+)/.-")
 
 local config = ImguiConfig:fromFile(root .. "/base.config.lua")
-return require("..\\userdata\\skins\\4649ceynou\\base")
+return require(root .. "/base")
     .createNoteskin(2, 0, 0, ..., config)
