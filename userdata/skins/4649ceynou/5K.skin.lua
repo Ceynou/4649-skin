@@ -1,6 +1,7 @@
+local ImguiConfig = require("sphere.ImguiConfig")
 
-local config = assert(loadfile("userdata/settings.lua"))
-local cfg = config()
+local root = (...):match("(.+)/.-")
 
+local config = ImguiConfig:fromFile(root .. "/base.config.lua")
 return require("..\\userdata\\skins\\4649ceynou\\base")
-    .createNoteskin(5, 0, 0, ..., cfg)
+    .createNoteskin(5, 0, 0, ..., config)
