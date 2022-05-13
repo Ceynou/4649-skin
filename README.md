@@ -1,77 +1,40 @@
 # 4649-skin
-soundsphere script that can generate a skin off a base file.
+soundsphere script that can sets a skin off a base file.
 
-### adding the default settings of the skin
-add the following code to your settings file in `userdata\settings.lua`
-```lua
-	_4649 = {
-		notes = {
-			height = 20,
-			widthKey1 = 48,
-			widthKey2 = 48,
-			widthSP = 80
-		},
-		ui = {
-			align = "center",
-			baseElements = false,
-			hitposition = 460,
-			offset = 0,
-			scratchAlign = "left",
-			widthLines = 2
-		}
-	},
-```
-so it should look like this:
-```lua
-return {
-	_4649 = {
-		notes = {
-			height = 20,
-			widthKey1 = 48,
-			widthKey2 = 48,
-			widthSP = 80
-		},
-		ui = {
-			align = "center",
-			baseElements = false,
-			hitposition = 460,
-			offset = 0,
-			scratchAlign = "left",
-			widthLines = 2
-		}
-	},
-	audio = {
-		midi = {
-			constantVolume = false
-		},
-		mode = {
-			preview = "streamOpenAL",
-			primary = "sample",
-			secondary = "sample"
-		},
-		volume = {
-			effects = 1,
-			master = 0.6,
-			music = 1
-		}
-	},
-```
+
 ### add more keymode
 You need to create a new file, the name doesn't matter as long as the extension is `.skin.lua`
 in that file add the following code
 ```lua
-local config = assert(loadfile("userdata/settings.lua"))
-local cfg = config()
+local ImguiConfig = require("sphere.ImguiConfig")
 
-return require("..\\userdata\\skins\\4649ceynou\\base")
-    .createNoteskin(key, scratch, pedal, ..., cfg)
+local root = (...):match("(.+)/.-")
+
+local config = ImguiConfig:fromFile(root .. "/base.config.lua")
+return require(root .. "/base")
+    .createNoteskin(key, scratch, pedal, ..., config)
 ```
 and replace key, scratch and pedal by their corresponding value, so if you want to make a skin for 13 keys and 1 pedal, it will become
 ```lua
-    .createNoteskin(13, 0, 1, ..., cfg)
+    .createNoteskin(13, 0, 1, ..., config)
+```
+<br>
+<br>
+
+### add a separate config file
+You need to copy the content of base.config.lua file and rename it somethingelse.config.lua
+then in the file(s) for the keymode(s) you want to use that config file edit   
+```lua
+local config = ImguiConfig:fromFile(root .. "/base.config.lua")
+```
+to
+```lua
+local config = ImguiConfig:fromFile(root .. "/somethingelse.config.lua")
 ```
 
-#### note that there can only be the following cases
+_________________
+
+#### note that there can only be the following cases for scratch and pedal
 `key, 1, 0,`
 `key, 2, 0,`
 `key, 1, 1,`
