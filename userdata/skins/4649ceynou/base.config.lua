@@ -1,36 +1,47 @@
-local ImguiConfig = require("sphere.ImguiConfig")
-local imgui = require("cimgui")
-local config = ImguiConfig:new()
+local JustConfig = require("sphere.JustConfig")
+local imgui = require("sphere.imgui")
+local round = require("math_util").round
+local just = require("just")
 
+local config = JustConfig:new()
 
-local ptrs = config:setDefs(--[[defs]] {
-	align = {"int[?]", 1, {1}},
-	baseElements = {"bool[?]", 1, {false}},
-	height = {"float[?]", 1, {26}},
-	hitposition = {"float[?]", 1, {460}},
-	offset = {"float[?]", 1, {0}},
-	scratchAlign = {"int[?]", 1, {0}},
-	widthKey1 = {"float[?]", 1, {48}},
-	widthKey2 = {"float[?]", 1, {48}},
-	widthLines = {"float[?]", 1, {2}},
-	widthSP = {"float[?]", 1, {80}}
-} --[[/defs]])
+config.data = --[[data]] {
+	align = "center",
+	autosave = true,
+	baseElements = false,
+	height = 26,
+	hitposition = 460,
+	offset = 0,
+	scratchAlign = "left",
+	widthKey1 = 48,
+	widthKey2 = 48,
+	widthLines = 2,
+	widthSP = 80
+} --[[/data]]
 
-local position = {"left", "center", "right"}
+function config:draw(w, h)
+	local data = self.data
 
-function config:render()
-    imgui.Checkbox("Base elements", ptrs.baseElements)
-    imgui.Combo_Str("Playfield align", ptrs.align, table.concat(position, "\0"))
-    imgui.Combo_Str("Scratch align", ptrs.scratchAlign, table.concat(position, "\0"))
-    imgui.SliderFloat("Hit position", ptrs.hitposition, 0, 480, "%.0f")
-    imgui.SliderFloat("Width key1", ptrs.widthKey1, 4, 100, "%.0f")
-    imgui.SliderFloat("Width key2", ptrs.widthKey2, 4, 100, "%.0f")
-    imgui.SliderFloat("Width SP", ptrs.widthSP, 4, 100, "%.0f")
-    imgui.SliderFloat("Height", ptrs.height, 4, 100, "%.0f")
-    imgui.SliderFloat("Width lines", ptrs.widthLines, 0, 10, "%.0f")
-    imgui.SliderFloat("Offset", ptrs.offset, -480, 480, "%.0f")
-	if imgui.Button("Save") then
+	just.indent(10)
+	just.text("Skin by 4649ceynou")
+
+	imgui.setSize(w, h, w / 2, 55)
+    data.baseElements = imgui.checkbox("baseElements", data.baseElements, "Base Elements")
+    data.align = imgui.combo("align", data.align, {"left", "center", "right"}, nil, "Playfield")
+    data.scratchAlign = imgui.combo("scratchAlign", data.scratchAlign, {"left", "center", "right"}, nil, "Scratch")
+    data.hitposition = imgui.slider1("hitposition", data.hitposition, "%.0f", 0, 480, 10, "Hit position")
+    data.widthKey1 = imgui.slider1("widthKey1", data.widthKey1, "%.0f", 4, 100, 1, "White key's width")
+    data.widthKey2 = imgui.slider1("widthKey2", data.widthKey2, "%.0f", 4, 100, 1, "Blue key's width")
+    data.widthSP = imgui.slider1("widthSP", data.widthSP, "%.0f", 4, 100, 1, "SP key's width")
+    data.height = imgui.slider1("height", data.height, "%.0f", 4, 100, 1, "Key's height")
+    data.widthLines = imgui.slider1("widthLines", data.widthLines, "%.0f", 0, 10, 1, "Lines's width")
+    data.offset = imgui.slider1("offset", data.offset, "%.0f", -480, 480, 10, "Playfield's offset")
+	
+	imgui.separator()
+	if imgui.button("Write config file", "Write") then
 		self:write()
 	end
+	data.autosave = imgui.checkbox("autosave", data.autosave, "Autosave")
 end
+
 return config

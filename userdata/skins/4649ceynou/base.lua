@@ -1,12 +1,12 @@
 local NoteSkinVsrg = require("sphere.models.NoteSkinModel.NoteSkinVsrg")
 local BasePlayfield = require("sphere.models.NoteSkinModel.BasePlayfield")
+local gfx_util = require("gfx_util")
 
 local base = {}
 
 base.createNoteskin = function(key, scratch, pedal, path, config)
 	local name, inputMode
 	local width, input, image, spaces, pressed, released, lines = {}, {}, {}, {}, {}, {}, {}
-	local position = {"left", "center", "right"}
 
 	for i = 1,  key do
 		input[i] = "key" .. i
@@ -61,7 +61,7 @@ base.createNoteskin = function(key, scratch, pedal, path, config)
 		if pedal ~= 0 then
 			local inputP, imageP = {}, {}
 
-			name = "4649 " .. key .. "K" .. pedal .. "P" .. scratch .. "S"
+			name = "4649's " .. key .. "K" .. pedal .. "P" .. scratch .. "S"
 			inputMode = key .. "key" .. pedal .. "pedal" .. scratch .. "scratch"
 
 			inputP[1] = "pedal" .. 1
@@ -70,14 +70,14 @@ base.createNoteskin = function(key, scratch, pedal, path, config)
 			imageS[1] = "colorS"
 			imageP[1] = "colorP"
 
-			if position[config:get("scratchAlign") + 1] == "center" then
+			if config:get("scratchAlign") == "center" then
 				table.insert(input, 1, inputS[1])
 				table.insert(input, 2, inputP[1])
 
 				table.insert(image, 1, imageS[1])
 				table.insert(image, 2, imageP[1])
 			else
-				if position[config:get("scratchAlign") + 1] == "right" then
+				if config:get("scratchAlign") == "right" then
 					table.insert(input, 1, inputP[1])
 					table.insert(input, #input + 1, inputS[1])
 
@@ -100,7 +100,7 @@ base.createNoteskin = function(key, scratch, pedal, path, config)
 				table.insert(width, #input, config:get("widthSP"))
 			end
 		else
-			name = "4649 " .. key .. "K" .. scratch .. "S"
+			name = "4649's " .. key .. "K" .. scratch .. "S"
 			inputMode = key .. "key" .. scratch .. "scratch"
 
 			for i = 1, scratch do
@@ -109,7 +109,7 @@ base.createNoteskin = function(key, scratch, pedal, path, config)
 			end
 
 			if scratch == 2 then
-				if position[config:get("scratchAlign") + 1] == "center" then
+				if config:get("scratchAlign") == "center" then
 					table.insert(input, 1, inputS[1])
 					table.insert(input, 2, inputS[2])
 
@@ -132,11 +132,11 @@ base.createNoteskin = function(key, scratch, pedal, path, config)
 					table.insert(lines, #input, config:get("widthLines"))
 				end
 			else
-				if position[config:get("scratchAlign") + 1] == "center" then
+				if config:get("scratchAlign") == "center" then
 					table.insert(input, 1, inputS[1])
 
 					table.insert(image, 1, imageS[1])
-				elseif position[config:get("scratchAlign") + 1] == "left" then
+				elseif config:get("scratchAlign") == "left" then
 					table.insert(input, 1, inputS[1])
 
 					table.insert(image, 1, imageS[1])
@@ -162,7 +162,7 @@ base.createNoteskin = function(key, scratch, pedal, path, config)
 	elseif pedal ~= 0 then
 		local inputP, imageP = {}, {}
 
-		name = "4649 " .. key .. "K" .. pedal .. "P"
+		name = "4649's " .. key .. "K" .. pedal .. "P"
 		inputMode = key .. "key" .. pedal .. "pedal"
 		
 		for i = 1, pedal do
@@ -173,11 +173,11 @@ base.createNoteskin = function(key, scratch, pedal, path, config)
 			imageP[i] = "colorP"
 		end
 
-		if position[config:get("scratchAlign") + 1] == "center" then
+		if config:get("scratchAlign") == "center" then
 			table.insert(input, 1, inputP[1])
 
 			table.insert(image, 1, imageP[1])
-		elseif position[config:get("scratchAlign") + 1] == "left" then
+		elseif config:get("scratchAlign") == "left" then
 			table.insert(input, #input, inputP[1])
 
 			table.insert(image, #input, imageP[1])
@@ -199,7 +199,7 @@ base.createNoteskin = function(key, scratch, pedal, path, config)
 			table.insert(lines, 2, config:get("widthLines"))
 		end
 	else
-		name = "4649 " .. key .. "K"
+		name = "4649's " .. key .. "K"
 		inputMode = key .. "key"
 	end
 
@@ -211,15 +211,15 @@ base.createNoteskin = function(key, scratch, pedal, path, config)
 	local widthTotal = 0
 	local spaceTotal = 0
 	local lineSpace = 0
-	if position[config:get("align") + 1] == "center" and scratch+pedal == 1 then
-		if position[config:get("scratchAlign") + 1] == "left" then
+	if config:get("align") == "center" and scratch+pedal == 1 then
+		if config:get("scratchAlign")== "left" then
 			offsetCenter = -config:get("widthSP") / 2
-		elseif  position[config:get("scratchAlign") + 1] == "right" then
+		elseif  config:get("scratchAlign") == "right" then
 			offsetCenter = config:get("widthSP") / 2
 		end
 	end
 
-	if position[config:get("scratchAlign") + 1] == "center" then
+	if config:get("scratchAlign") == "center" then
 		for i = 1, key do
 			widthTotal = widthTotal + width[i]
 			spaceTotal = spaceTotal + spaces[i]
@@ -262,7 +262,7 @@ base.createNoteskin = function(key, scratch, pedal, path, config)
 	noteskin:setInput(input)
 	noteskin:setColumns({
 		offset = config:get("offset") + offsetCenter,
-		align = position[config:get("align") + 1],
+		align = config:get("align"),
 		width = width,
 		space = spaces,
 	})
@@ -318,20 +318,18 @@ base.createNoteskin = function(key, scratch, pedal, path, config)
 		color = {0, 0, 0, 1}
 	})
 	playfield:add({
-		class = "RectangleView",
 		transform = playfield:newLaneCenterTransform(480),
-		rectangles = {
-			{
-				color = {0, 0, 0, 1},
-				mode = "fill",
-				lineStyle = "smooth",
-				lineWidth = 1,
-				x = -widthTotal / 2 - lineSpace,
-				y = config:get("hitposition"),
-				w = widthTotal + lineSpace * 2,
-				h = 480 - config:get("hitposition"),
-			},
-		}
+        draw = function(self)
+            love.graphics.replaceTransform(gfx_util.transform(self.transform))
+            love.graphics.setColor(0, 0, 0, 1)
+            love.graphics.rectangle(
+				"fill", 
+				-widthTotal / 2 - lineSpace, 
+				config:get("hitposition"),
+				widthTotal + lineSpace * 2,
+				480 - config:get("hitposition")
+			)
+        end
 	})
 	playfield:addBga({
 		transform = {{1 / 2, -16 / 9 / 2}, {0, -7 / 9 / 2}, 0, {0, 16 / 9}, {0, 16 / 9}, 0, 0, 0, 0}
@@ -355,63 +353,67 @@ base.createNoteskin = function(key, scratch, pedal, path, config)
 
 	for i = 2, key + scratch + pedal do
 		widthAdd[i] = widthAdd[i-1] + spaces[i-1] + width[i-1]
-		if i > math.ceil((key+scratch+pedal) / 4) and i < math.ceil((key+scratch+pedal) / 4 * 3) and position[config:get("scratchAlign") + 1] == "center" then
+		if i > math.ceil((key+scratch+pedal) / 4) and i < math.ceil((key+scratch+pedal) / 4 * 3) and config:get("scratchAlign") == "center" then
 			oneOrZero = 1
 		else
 			oneOrZero = 0
 		end
 		playfield:add({
-			class = "RectangleView",
 			transform = playfield:newLaneCenterTransform(480),
-			rectangles = {
-				{
-					color = {0.5, 0.5, 0.5, 1},
-					mode = "fill",
-					lineStyle = "smooth",
-					lineWidth = 1,
-					x = -widthTotal / 2 + widthAdd[i] - oneOrZero * config:get("widthLines") / 2,
-					y = 0,
-					w = lines[i],
-					h = config:get("hitposition"),
-				},
-			}
+			draw = function(self)
+				love.graphics.replaceTransform(gfx_util.transform(self.transform))
+				love.graphics.setColor(0.5, 0.5, 0.5, 1)
+				love.graphics.rectangle(
+					"fill", 
+					-widthTotal / 2 + widthAdd[i] - oneOrZero * config:get("widthLines") / 2,
+					0,
+					lines[i],
+					config:get("hitposition")
+				)
+			end
 		})
 	end
 	playfield:add({
-		class = "RectangleView",
 		transform = playfield:newLaneCenterTransform(480),
-		rectangles = {
-			{
-				color = {0.5, 0.5, 0.5, 1},
-				mode = "fill",
-				lineStyle = "smooth",
-				lineWidth = 1,
-				x = -widthTotal / 2 - lineSpace,
-				y = config:get("hitposition"),
-				w = widthTotal + lineSpace * 2,
-				h = config:get("widthLines") * 2,
-			},
-			{
-				color = {0.5, 0.5, 0.5, 1},
-				mode = "fill",
-				lineStyle = "smooth",
-				lineWidth = 1,
-				x = -widthTotal / 2 - config:get("widthLines") * 2 - lineSpace,
-				y = 0,
-				w = config:get("widthLines") * 2,
-				h = 480,
-			},
-			{
-				color = {0.5, 0.5, 0.5, 1},
-				mode = "fill",
-				lineStyle = "smooth",
-				lineWidth = 1,
-				x = widthTotal / 2 + lineSpace,
-				y = 0,
-				w = config:get("widthLines") * 2,
-				h = 480,
-			},
-		}
+        draw = function(self)
+            love.graphics.replaceTransform(gfx_util.transform(self.transform))
+            love.graphics.setColor(0.5, 0.5, 0.5, 1)
+            love.graphics.rectangle(
+				"fill", 
+				-widthTotal / 2 - lineSpace,
+				config:get("hitposition"),
+				widthTotal + lineSpace * 2,
+				config:get("widthLines") * 2
+			)
+        end
+	})
+	playfield:add({
+		transform = playfield:newLaneCenterTransform(480),
+        draw = function(self)
+            love.graphics.replaceTransform(gfx_util.transform(self.transform))
+            love.graphics.setColor(0.5, 0.5, 0.5, 1)
+            love.graphics.rectangle(
+				"fill", 
+				-widthTotal / 2 - config:get("widthLines") * 2 - lineSpace,
+				0,
+				config:get("widthLines") * 2,
+				480
+			)
+        end
+	})
+	playfield:add({
+		transform = playfield:newLaneCenterTransform(480),
+        draw = function(self)
+            love.graphics.replaceTransform(gfx_util.transform(self.transform))
+            love.graphics.setColor(0.5, 0.5, 0.5, 1)
+            love.graphics.rectangle(
+				"fill", 
+				widthTotal / 2 + lineSpace, 
+				0,
+				config:get("widthLines") * 2,
+				480
+			)
+        end
 	})
 	return noteskin
 end
