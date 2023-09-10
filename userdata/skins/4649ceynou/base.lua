@@ -250,7 +250,7 @@ base.createNoteskin = function(key, scratch, pedal, path, config)
 			spaceTotal = spaceTotal + spaces[i]
 		end
 	end
-	local noteskin = NoteSkinVsrg:new({
+	local noteskin = NoteSkinVsrg({
 		path = path,
 		name = name,
 		inputMode = inputMode,
@@ -311,9 +311,8 @@ base.createNoteskin = function(key, scratch, pedal, path, config)
 		h = 1,
 		color = {0.25, 0.25, 0.25, 1}
 	})
-	local playfield = BasePlayfield:new({
-		noteskin = noteskin
-	})
+	local playfield = BasePlayfield(noteskin)
+	
 	playfield:addColumnsBackground({
 		color = {0, 0, 0, 1}
 	})
